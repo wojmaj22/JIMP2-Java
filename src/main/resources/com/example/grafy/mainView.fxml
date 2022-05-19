@@ -52,10 +52,10 @@
          <children>
             <Label alignment="CENTER" prefHeight="20.0" prefWidth="504.0" text="Generowanie" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Label alignment="CENTER" layoutX="560.0" prefHeight="20.0" prefWidth="336.0" text="Obliczanie drogi / Sprawdzanie spójności" textAlignment="CENTER" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <TextField alignment="CENTER" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Wymiar grafu" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="20.0" />
+            <TextField fx:id="wymiarGrafu" alignment="CENTER" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Wymiar grafu" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="20.0" />
             <TextField fx:id="wagaKrawedzi" alignment="CENTER" layoutX="168.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Zakres wag krawędzi" AnchorPane.leftAnchor="168.0" AnchorPane.topAnchor="20.0" />
-            <TextField alignment="CENTER" layoutX="336.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Ilość podziałów grafu" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="20.0" />
-            <TextField alignment="CENTER" layoutY="46.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do zapisu" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="50.0" />
+            <TextField fx:id="ilePodzialow" alignment="CENTER" layoutX="336.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Ilość podziałów grafu" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="20.0" />
+            <TextField fx:id="polePlikDoZapisu" alignment="CENTER" layoutY="46.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do zapisu" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="50.0" />
             <Button layoutX="164.0" layoutY="45.0" mnemonicParsing="false" onAction="#onGenerateButtonClick" prefHeight="26.0" prefWidth="160.0" text="Generuj" AnchorPane.leftAnchor="168.0" AnchorPane.topAnchor="50.0" />
             <Button layoutX="328.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="160.0" text="Zapisz" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="50.0" />
             <TextField alignment="CENTER" layoutX="504.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do odczytu" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="20.0" />
