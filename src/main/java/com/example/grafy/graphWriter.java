@@ -8,21 +8,21 @@ public class graphWriter {
 
 	public static void writeToFile( Graph graph, String Filename){
 		File file = new File(Filename);
-		FileWriter out = null;
+		FileWriter out;
 		try {
 			out = new FileWriter(file);
 			out.write( graph.xDimension + " " + graph.yDimension + "\n");
-			String buf = "";
+			StringBuilder buf = new StringBuilder();
 			int currentVertex = 0;
 			for (int i = 0; i < graph.xDimension; i++){
 				for (int j = 0; j < graph.yDimension; j++){
 					int amount = graph.vertices[currentVertex].size();
 					for ( int k = 0; k < amount; k++){
-						buf = buf + " " + graph.vertices[currentVertex].get(k) + " :" + graph.distances[currentVertex].get(k) + " ";
+						buf.append(" ").append(graph.vertices[currentVertex].get(k)).append(" :").append(graph.distances[currentVertex].get(k)).append(" ");
 					}
-					out.write( buf);
+					out.write(buf.toString());
 					out.write( "\n");
-					buf = "";
+					buf = new StringBuilder();
 					currentVertex++;
 				}
 			}

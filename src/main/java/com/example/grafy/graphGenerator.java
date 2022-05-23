@@ -2,7 +2,6 @@ package com.example.grafy;
 
 // Dopisać generowanie grafu i zapis do pliku
 
-import java.util.LinkedList;
 import java.util.Random;
 
 public class graphGenerator {
@@ -32,14 +31,7 @@ public class graphGenerator {
 
 	void generateGraph(){
 		Graph graph = Graph.getGraph();
-		graph.xDimension = xDimension;
-		graph.yDimension = yDimension;
-		graph.vertices = new LinkedList[xDimension*yDimension];
-		graph.distances = new LinkedList[xDimension*yDimension];
-		for( int i = 0; i < xDimension * yDimension; i++){
-			graph.vertices[i] = new LinkedList();
-			graph.distances[i] = new LinkedList();
-		}
+		graph.setGraph( xDimension, yDimension);
 		int distanceDiff = maxDistance - minDistance;
 		Random rand = new Random();
 		int currentVertex = 0;

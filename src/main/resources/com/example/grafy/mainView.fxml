@@ -61,7 +61,7 @@
             <TextField alignment="CENTER" layoutX="504.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do odczytu" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="20.0" />
             <Button layoutX="672.0" layoutY="20.0" mnemonicParsing="false" prefWidth="160.0" text="Odczytaj" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="20.0" />
             <Button layoutX="504.0" layoutY="46.0" mnemonicParsing="false" prefWidth="160.0" text="Oblicz drogę" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="50.0" />
-            <Button layoutX="672.0" layoutY="46.0" mnemonicParsing="false" prefWidth="160.0" text="Sprawdż spójność" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="50.0" />
+            <Button layoutX="672.0" layoutY="46.0" mnemonicParsing="false" onAction="#onBfsButton" prefWidth="160.0" text="Sprawdż spójność" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="50.0" />
             <ScrollBar layoutX="819.0" layoutY="88.0" orientation="VERTICAL" prefHeight="446.0" prefWidth="14.0" AnchorPane.bottomAnchor="74.0" AnchorPane.leftAnchor="824.0" />
             <ScrollBar layoutX="4.0" layoutY="536.0" prefHeight="14.0" prefWidth="820.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="4.0" />
             <Line endX="11.0" endY="-100.0" layoutX="487.0" layoutY="181.0" startX="10.999969482421875" startY="-181.0" />
