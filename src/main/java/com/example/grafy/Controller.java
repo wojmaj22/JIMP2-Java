@@ -24,7 +24,12 @@ public class Controller {
 
 	@FXML
 	protected void onSaveButtonClick(){
-
+		String filename = "Data\\" + writeFileTextField.getText();
+		if ( filename.contains(".txt") == false){
+			filename += ".txt";
+		}
+		Graph graph = Graph.getGraph();
+		graphWriter.writeToFile( graph, filename);
 	}
 
 	@FXML
@@ -60,7 +65,7 @@ public class Controller {
 		try { // pobieranie ilości podzieleń grafu
 			amountOfCuts = Integer.valueOf(amountOfCutsTextField.getText());
 		} catch ( Exception a){
-			amountOfCutsTextField.setStyle("-fx-background-color:red;");
+			amountOfCuts = 0;
 		}
 		try{ // pobieranie nazwy pliku do zapisania grafu
 			writeFile = writeFileTextField.getText();

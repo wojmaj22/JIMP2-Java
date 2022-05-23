@@ -3,13 +3,16 @@ package com.example.grafy;
 import java.util.LinkedList;
 
 public class Graph {
+
+	public static Graph graph = null;
+
 	int xDimension;
 	int yDimension;
-	LinkedList<Integer>  vertices[];
-	LinkedList<Double> distances[];
+	LinkedList<Integer>[] vertices;
+	LinkedList<Double>[] distances;
 
 
-	public Graph(int xDimension, int yDimension) {
+	private Graph(int xDimension, int yDimension) {
 		this.xDimension = xDimension;
 		this.yDimension = yDimension;
 		vertices = new LinkedList[xDimension*yDimension];
@@ -20,5 +23,15 @@ public class Graph {
 		}
 	}
 
+	public Graph() {
+
+	}
+
+	public static Graph getGraph(){
+		if (graph == null){
+			graph = new Graph();
+		}
+		return graph;
+	}
 
 }

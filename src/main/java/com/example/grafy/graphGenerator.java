@@ -2,6 +2,7 @@ package com.example.grafy;
 
 // Dopisać generowanie grafu i zapis do pliku
 
+import java.util.LinkedList;
 import java.util.Random;
 
 public class graphGenerator {
@@ -13,13 +14,13 @@ public class graphGenerator {
 	String writeFile;
 
 	// nazwy w konstruktorze do zmiany
-	graphGenerator(int waga1, int waga2, int wymiarX, int wymiarY, int ilePodzialow, String plikDoZapisu){
-		this.minDistance = waga1;
-		this.maxDistance = waga2;
-		this.xDimension = wymiarX;
-		this.yDimension = wymiarY;
-		this.amountOfCuts = ilePodzialow;
-		this.writeFile = plikDoZapisu;
+	graphGenerator(int minDistance, int maxDistance, int xDimension, int yDimension, int cutsAmount, String writeFile){
+		this.minDistance = minDistance;
+		this.maxDistance = maxDistance;
+		this.xDimension = xDimension;
+		this.yDimension = yDimension;
+		this.amountOfCuts = cutsAmount;
+		this.writeFile = writeFile;
 	}
 
 	void printToTerminal(){ // metoda testowa do sprawdzania poprawności przetwarzania danych
@@ -30,51 +31,59 @@ public class graphGenerator {
 	}
 
 	void generateGraph(){
-		Graph graph = new Graph(xDimension, yDimension);
+		Graph graph = Graph.getGraph();
+		graph.xDimension = xDimension;
+		graph.yDimension = yDimension;
+		graph.vertices = new LinkedList[xDimension*yDimension];
+		graph.distances = new LinkedList[xDimension*yDimension];
+		for( int i = 0; i < xDimension * yDimension; i++){
+			graph.vertices[i] = new LinkedList();
+			graph.distances[i] = new LinkedList();
+		}
 		int distanceDiff = maxDistance - minDistance;
 		Random rand = new Random();
-		int currentVertice = 0;
+		int currentVertex = 0;
 		for( int i = 0; i < xDimension-1; i++){ // dodawanie krawędzi bez prawych i dolnych skrajnych boków
 			for ( int j = 0; j < yDimension-1; j++){
-				graph.vertices[currentVertice].add(currentVertice+1); // dodawanie prawej krawędzi
-				graph.distances[currentVertice].add(rand.nextDouble() * distanceDiff + minDistance);
+				graph.vertices[currentVertex].add(currentVertex+1); // dodawanie prawej krawędzi
+				graph.distances[currentVertex].add(rand.nextDouble() * distanceDiff + minDistance);
 
-				graph.vertices[currentVertice].add(currentVertice+xDimension);// dodawanie dolnej krawędzi
-				graph.distances[currentVertice].add(rand.nextDouble() * distanceDiff + minDistance);
+				graph.vertices[currentVertex].add(currentVertex+xDimension);// dodawanie dolnej krawędzi
+				graph.distances[currentVertex].add(rand.nextDouble() * distanceDiff + minDistance);
 
 				if( j == xDimension - 2)
-					currentVertice += 2;
+					currentVertex += 2;
 				else
-					currentVertice++;
+					currentVertex++;
 			}
 		}
 
-		currentVertice = xDimension * yDimension - xDimension; // dodawanie dolnego boku
+		currentVertex = xDimension * yDimension - xDimension; // dodawanie dolnego boku
 		for (int i = 0; i < xDimension - 1; i++){
-			graph.vertices[currentVertice].add(currentVertice+1);
-			graph.distances[currentVertice].add(rand.nextDouble() * distanceDiff + minDistance);
-			currentVertice++;
+			graph.vertices[currentVertex].add(currentVertex+1);
+			graph.distances[currentVertex].add(rand.nextDouble() * distanceDiff + minDistance);
+			currentVertex++;
 		}
 
-		currentVertice = xDimension - 1; // dodawanie prawego boku
+		currentVertex = xDimension - 1; // dodawanie prawego boku
 		for (int i = 0; i < yDimension - 1; i++){
-			graph.vertices[currentVertice].add(currentVertice+xDimension);
-			graph.distances[currentVertice].add(rand.nextDouble() * distanceDiff + minDistance);
-			currentVertice += xDimension;
+			graph.vertices[currentVertex].add(currentVertex+xDimension);
+			graph.distances[currentVertex].add(rand.nextDouble() * distanceDiff + minDistance);
+			currentVertex += xDimension;
 		}
 
-		currentVertice = xDimension*yDimension-1;
+		currentVertex = xDimension*yDimension-1;
 		for ( int i = xDimension- 1 ; i >= 0; i--){ // dodawanie "poprzednich" krawędzi
 			for ( int j = yDimension - 1 ; j >= 0 ; j--){
 				if( j != 0){
-					graph.vertices[currentVertice].add(currentVertice-1);
-					graph.distances[currentVertice].add(graph.distances[currentVertice-1].peekFirst());
+					graph.vertices[currentVertex].add(currentVertex-1);
+					graph.distances[currentVertex].add(graph.distances[currentVertex-1].peekFirst());
 				}
 				if( i != 0){
-					graph.vertices[currentVertice].add(currentVertice-xDimension);
-					graph.distances[currentVertice].add(graph.distances[currentVertice-xDimension].peekLast());
+					graph.vertices[currentVertex].add(currentVertex-xDimension);
+					graph.distances[currentVertex].add(graph.distances[currentVertex-xDimension].peekLast());
 				}
-				currentVertice--;
+				currentVertex--;
 			}
 		}
 
