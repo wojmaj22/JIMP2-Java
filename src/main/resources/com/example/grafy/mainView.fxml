@@ -60,12 +60,12 @@
             <Button layoutX="328.0" layoutY="45.0" mnemonicParsing="false" onAction="#onSaveButtonClick" prefHeight="26.0" prefWidth="160.0" text="Zapisz" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="50.0" />
             <TextField alignment="CENTER" layoutX="504.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do odczytu" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="20.0" />
             <Button layoutX="672.0" layoutY="20.0" mnemonicParsing="false" prefWidth="160.0" text="Odczytaj" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="20.0" />
-            <Button layoutX="504.0" layoutY="46.0" mnemonicParsing="false" prefWidth="160.0" text="Oblicz drogę" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="50.0" />
+            <Button layoutX="504.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCheckRouteButton" prefWidth="160.0" text="Oblicz drogę" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="50.0" />
             <Button layoutX="672.0" layoutY="46.0" mnemonicParsing="false" onAction="#onBfsButton" prefWidth="160.0" text="Sprawdż spójność" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="50.0" />
             <ScrollBar layoutX="819.0" layoutY="88.0" orientation="VERTICAL" prefHeight="446.0" prefWidth="14.0" AnchorPane.bottomAnchor="74.0" AnchorPane.leftAnchor="824.0" />
             <ScrollBar layoutX="4.0" layoutY="536.0" prefHeight="14.0" prefWidth="820.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="4.0" />
             <Line endX="11.0" endY="-100.0" layoutX="487.0" layoutY="181.0" startX="10.999969482421875" startY="-181.0" />
-            <Line endX="241.0" endY="-7.62939453125E-6" layoutX="599.0" layoutY="82.0" startX="-632.507080078125" startY="-7.62939453125E-6" />
+            <Line endX="241.0" endY="-7.62939453125E-6" layoutX="599.0" layoutY="82.0" startX="-632.507080078125" startY="-7.62939453125E-6" AnchorPane.leftAnchor="-34.007080078125" AnchorPane.topAnchor="81.49999237060547" />
             <ImageView fitHeight="20.0" fitWidth="818.0" layoutX="4.0" layoutY="566.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="20.0">
                <image>
                   <Image url="@Pasek.png" />
@@ -77,6 +77,9 @@
             <Label fx:id="maxEdgeLengthLabel" layoutX="794.0" layoutY="583.0" AnchorPane.rightAnchor="26.0" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="369.0" layoutY="553.0" text="Odległość od wierzchołka" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="398.0" layoutY="583.0" text="Wagi krawędzi" />
+            <TextField fx:id="firstVertexTextField" layoutX="676.0" layoutY="94.0" prefHeight="26.0" prefWidth="71.0" promptText="tymczasowe do odległości" />
+            <TextField fx:id="secondVertexTextField" layoutX="752.0" layoutY="94.0" prefHeight="26.0" prefWidth="71.0" promptText="tymczasowe" />
+            <Pane fx:id="drawing" layoutX="14.0" layoutY="94.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="90.0" />
          </children>
     </AnchorPane>
   </children>
