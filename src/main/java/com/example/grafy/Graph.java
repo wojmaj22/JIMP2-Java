@@ -21,8 +21,8 @@ public class Graph {
 	private int minWeight;
 	private int nodeAmount;
 	private int cutsAmount;
-	LinkedList<Integer>[] vertices;
-	LinkedList<Double>[] distances;
+	private LinkedList<Integer>[] vertices;
+	private LinkedList<Double>[] distances;
 
 	public Graph() {
 
@@ -267,6 +267,11 @@ public class Graph {
 	public int getCutsAmount() {
 		return cutsAmount;
 	}
-
+	public LinkedList<Integer> getVertices( int u) {
+		return vertices[u];
+	}
+	public LinkedList<Double> getDistances( int u) {
+		return distances[u];
+	}
 
 }

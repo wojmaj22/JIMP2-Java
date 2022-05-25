@@ -44,42 +44,40 @@ public class Controller {
 
 	@FXML
 	protected void onGenerateButtonClick( ) { // zmienić w przypadku braku wczytanego argumentu
-		String distanceRange = edgeLengthTextField.getText();
-		String dimensions = graphDimensionsTextField.getText();
+		String weight;
+		String dimensions;
 		int minWeight = 0;
-		int maxWeight = 0;
-		int xDimension = 0;
-		int yDimension = 0;
-		try { // wczytywanie wymiarów
-			int tmp = dimensions.indexOf('x'); // oddzielenie wymiarów
-			xDimension = Integer.parseInt(dimensions.substring(0, tmp));
-			yDimension = Integer.parseInt(dimensions.substring(tmp + 1));
-		} catch ( Exception ee) {
-			graphDimensionsTextField.setStyle("-fx-background-color:red;");
-			graphDimensionsTextField.setPromptText("Brak podanych wymiarów");
-		}
-		try{ // wczytywanie wag krawędzi
-			int length = distanceRange.length();
-			int tmp2 = distanceRange.indexOf('-'); // oddzielenie zakresów
-			minWeight = Integer.parseInt(distanceRange.substring(0, tmp2));
-			maxWeight = Integer.parseInt(distanceRange.substring(tmp2 + 1, length));
-			minEdgeLengthLabel.setText(String.valueOf(minWeight));
-			maxEdgeLengthLabel.setText(String.valueOf(maxWeight));
+		int maxWeight = 5;
+		int xDimension = 10;
+		int yDimension = 10;
+		int amountOfCuts = 0;
 
-		} catch (Exception e) {
-			edgeLengthTextField.setStyle("-fx-background-color:red;");
-			edgeLengthTextField.setPromptText("Brak podanego zakresu");
+		try{ // read dimensions of graph from user
+			dimensions = graphDimensionsTextField.getText();
+			xDimension = Integer.parseInt(dimensions.substring( 0, dimensions.indexOf("x")));
+			yDimension = Integer.parseInt(dimensions.substring( dimensions.indexOf("x") + 1));
+		} catch ( Exception e){
+			graphDimensionsTextField.setText("10x10");
 		}
-		int amountOfCuts;
-		try {
+		try { // read weight of edges
+			weight = edgeLengthTextField.getText();
+			minWeight = Integer.parseInt( weight.substring( 0, weight.indexOf("-")));
+			maxWeight = Integer.parseInt( weight.substring( weight.indexOf("-") + 1));
+		} catch ( Exception e){
+			edgeLengthTextField.setText("0-5");
+		}
+		try { // read amount of cuts
 			amountOfCuts = Integer.parseInt(amountOfCutsTextField.getText());
 		} catch (Exception a){
-			amountOfCuts = 0;
+			amountOfCutsTextField.setText("0");
 		}
+		minEdgeLengthLabel.setText(String.valueOf(minWeight));
+		maxEdgeLengthLabel.setText(String.valueOf(maxWeight));
 
-		graph.setGraph( xDimension, yDimension, maxWeight, minWeight, amountOfCuts);
-		graph.generateGraph();
-		graph.printGraphAdjacencyList();
+		graph.setGraph( xDimension, yDimension, maxWeight, minWeight, amountOfCuts); // setting graph properties
+		graph.generateGraph(); // generating graph edges
+
+		graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
 		//graphDrawer.drawGraph( this.graph , drawing);
 	}
@@ -89,35 +87,24 @@ public class Controller {
 		if (graph.breathFirstSearch()){
 			System.out.println("Graf jest spójny");
 		} else {
-			System.out.println("Graj nie jest spójny");
+			System.out.println("Graf nie jest spójny");
 		}
 	}
 
 	@FXML
 	protected void onCheckRouteButton(){
+
+		// to jest chwilowe, bo potem będzie wybierane z myszki
 		int source = Integer.parseInt(firstVertexTextField.getText());
 		int destination = Integer.parseInt(secondVertexTextField.getText());
 
-		Integer[] precursors = Djikstra.calculatePath( graph, source);
-		Double distance = 0.0;
-		int currentVertex = destination;
-		int tmp = 0;
-		for ( Integer i: precursors) {
-			System.out.print( tmp + ": " + i + " ");
-			tmp++;
-		}
-		System.out.println(" ");
-		System.out.println(" " + destination + ", " + source);
+		Djikstra djikstra = new Djikstra( source, destination, graph.getNodeAmount(), graph);
 
-		// tego while zapisać jako funkcja
-		while( currentVertex != source){
-			int indeks_poprzednika = graph.vertices[currentVertex].indexOf(precursors[currentVertex]);
-			distance += graph.distances[currentVertex].get(indeks_poprzednika);
-			System.out.print(" " + currentVertex);
-			currentVertex = precursors[currentVertex];
-		}
-		System.out.format("\n %f \n", distance);
-
+		djikstra.calculatePath( source);
+		djikstra.printPrecursorNode();
+		djikstra.createPath();
+		System.out.println( djikstra.getDistance(destination));
+		System.out.println(djikstra.getPath());
 	}
 
 }
