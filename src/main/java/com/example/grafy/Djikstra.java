@@ -1,26 +1,24 @@
 package com.example.grafy;
 
-import javax.sound.sampled.Line;
 import java.util.LinkedList;
 
 public class Djikstra {
 
-	private Graph graph;
-	private int source;
-	private int destination;
-	private Integer[] previousNode;
-	private Double [] distances;
-	private LinkedList<Integer> path;
+	private Graph graph; // point which graph are we using
+	private int source; // source from which we finde the shortest paths
+	private Integer[] previousNode; // array of prevoius nodes in the shortest path from source
+	private Double [] distances; // array of the shortest distances from source
 
-	public Djikstra( int source, int destination, int nodeAmount, Graph graph){
+	// Djikstra class constructor
+	public Djikstra( int source, int nodeAmount, Graph graph){
 		this.graph = graph;
 		this.source = source;
-		this.destination = destination;
 		this.previousNode = new Integer[nodeAmount];
 		this.distances = new Double[nodeAmount];
 	}
 
-	public void calculatePath( int source){
+	// algorith to find the shortest path from our source
+	public void calculatePath( ){
 		int amount = graph.getNodeAmount();
 		Double[] distance = new Double[amount];
 		boolean[] visited = new boolean[amount];
@@ -47,7 +45,7 @@ public class Djikstra {
 		previousNode = precursor;
 	}
 
-	// function used in Djikstra-algorith to find the nearest node( could be optimised a bit)
+	// method used in Djikstra-algorith to find the nearest node( could be optimised a bit)
 	private int getLowestNotVisited( int amount, Double[] distance, boolean[] visited){
 		int minIndex = 0;
 		Double minDistance = Double.MAX_VALUE;
@@ -59,27 +57,27 @@ public class Djikstra {
 		return minIndex;
 	}
 
+	// method to print previousNode array
 	void printPrecursorNode(){
 		int tmp = 0;
 		for ( Integer i: this.previousNode) {
 			System.out.println( tmp + ": " + i );
 			tmp++;
 		}
-		System.out.println(" ");
-		System.out.println(" " + destination + ", " + source);
 	}
 
-	void createPath(){
-		path = new LinkedList<>();
+	// method to create a path to our destination node
+	LinkedList<Integer> createPath( int destination){
+		LinkedList<Integer> path = new LinkedList<>();
 		int currentNode = destination;
 		while( currentNode != source){
-			//LinkedList<Integer> tmp = graph.getVertices(currentNode);
-			//int indeks_poprzednika = tmp.indexOf(previousNode[currentNode]);
 			path.add(currentNode);
 			currentNode = previousNode[currentNode];
 		}
+		return path;
 	}
 
+	// all needed getter
 	public Integer[] getPreviousNode() {
 		return previousNode;
 	}
@@ -88,9 +86,6 @@ public class Djikstra {
 	}
 	public Double getDistance( int index){
 		return distances[index];
-	}
-	public LinkedList<Integer> getPath() {
-		return path;
 	}
 
 }

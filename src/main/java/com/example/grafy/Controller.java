@@ -9,10 +9,11 @@ import javafx.scene.layout.Pane;
 public class Controller {
 
 	// Ogarnąć wyjątki itd. sprawdzić, czy to jest OK?
-	// Dodać zapisywanie na drugi przycisk, ew. pobieranie pola też
 
+	// a graph we will use later on;
 	private Graph graph = new Graph();
 
+	// these are well described by their names
 	@FXML
 	private Label minEdgeLengthLabel;
 	@FXML
@@ -30,9 +31,11 @@ public class Controller {
 	@FXML
 	private TextField secondVertexTextField;
 
+	// change it?
 	@FXML
 	private Pane drawing;
 
+	// Button to save graph to file
 	@FXML
 	protected void onSaveButtonClick(){
 		String filename = "Data\\" + writeFileTextField.getText();
@@ -42,6 +45,13 @@ public class Controller {
 		graph.writeToFile( filename);
 	}
 
+	// Button to read a graph from file
+	@FXML
+	protected void onReadButtonClick(){
+
+	}
+
+	// Button to generate a graph
 	@FXML
 	protected void onGenerateButtonClick( ) { // zmienić w przypadku braku wczytanego argumentu
 		String weight;
@@ -82,6 +92,7 @@ public class Controller {
 		//graphDrawer.drawGraph( this.graph , drawing);
 	}
 
+	// Button to check if graph is connected
 	@FXML
 	protected void onBfsButton(){
 		if (graph.breathFirstSearch()){
@@ -91,6 +102,7 @@ public class Controller {
 		}
 	}
 
+	// Button to calculate shortest path between Nodes
 	@FXML
 	protected void onCheckRouteButton(){
 
@@ -98,13 +110,13 @@ public class Controller {
 		int source = Integer.parseInt(firstVertexTextField.getText());
 		int destination = Integer.parseInt(secondVertexTextField.getText());
 
-		Djikstra djikstra = new Djikstra( source, destination, graph.getNodeAmount(), graph);
+		Djikstra djikstra = new Djikstra( source, graph.getNodeAmount(), graph);
 
-		djikstra.calculatePath( source);
+		djikstra.calculatePath();
 		djikstra.printPrecursorNode();
-		djikstra.createPath();
+		djikstra.createPath( destination);
 		System.out.println( djikstra.getDistance(destination));
-		System.out.println(djikstra.getPath());
+		System.out.println(djikstra.createPath(destination));
 	}
 
 }

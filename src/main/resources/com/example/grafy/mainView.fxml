@@ -37,7 +37,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<VBox maxHeight="630.0" maxWidth="840.0" minHeight="630.0" minWidth="840.0" prefHeight="630.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafy.Controller">
+<VBox maxHeight="630.0" maxWidth="840.0" minHeight="630.0" minWidth="840.0" prefHeight="630.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.grafy.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -59,7 +59,7 @@
             <Button layoutX="164.0" layoutY="45.0" mnemonicParsing="false" onAction="#onGenerateButtonClick" prefHeight="26.0" prefWidth="160.0" text="Generuj" AnchorPane.leftAnchor="168.0" AnchorPane.topAnchor="50.0" />
             <Button layoutX="328.0" layoutY="45.0" mnemonicParsing="false" onAction="#onSaveButtonClick" prefHeight="26.0" prefWidth="160.0" text="Zapisz" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="50.0" />
             <TextField alignment="CENTER" layoutX="504.0" layoutY="20.0" prefHeight="26.0" prefWidth="160.0" promptText="Plik do odczytu" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="20.0" />
-            <Button layoutX="672.0" layoutY="20.0" mnemonicParsing="false" prefWidth="160.0" text="Odczytaj" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="20.0" />
+            <Button layoutX="672.0" layoutY="20.0" mnemonicParsing="false" onAction="#onSaveButtonClick" prefWidth="160.0" text="Odczytaj" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="20.0" />
             <Button layoutX="504.0" layoutY="46.0" mnemonicParsing="false" onAction="#onCheckRouteButton" prefWidth="160.0" text="Oblicz drogę" AnchorPane.rightAnchor="172.0" AnchorPane.topAnchor="50.0" />
             <Button layoutX="672.0" layoutY="46.0" mnemonicParsing="false" onAction="#onBfsButton" prefWidth="160.0" text="Sprawdż spójność" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="50.0" />
             <ScrollBar layoutX="819.0" layoutY="88.0" orientation="VERTICAL" prefHeight="446.0" prefWidth="14.0" AnchorPane.bottomAnchor="74.0" AnchorPane.leftAnchor="824.0" />

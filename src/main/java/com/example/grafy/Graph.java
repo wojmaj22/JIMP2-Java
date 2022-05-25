@@ -15,19 +15,21 @@ import java.util.Random;
 
 public class Graph {
 
-	private int xDimension;
-	private int yDimension;
-	private int maxWeight;
-	private int minWeight;
-	private int nodeAmount;
-	private int cutsAmount;
-	private LinkedList<Integer>[] vertices;
-	private LinkedList<Double>[] distances;
+	private int xDimension; // the width of graph
+	private int yDimension;// the height of graph
+	private int maxWeight; // maximium weight of generated edge
+	private int minWeight; // minimum weight of generated edge
+	private int nodeAmount; // amount of nodes - x * y
+	private int cutsAmount; // how many times the graph will be cutted into parts
+	private LinkedList<Integer>[] vertices; // adjacency list of graph's vertices
+	private LinkedList<Double>[] distances; // adjacency list of graph's distances to vertices from above
 
+	// default constructor, need to use setGraph afterwards
 	public Graph() {
 
 	}
 
+	// bigger constructor, not really used
 	public Graph ( int xDimension, int yDimension, int maxWeight, int minWeight){
 		 this.xDimension = xDimension;
 		 this.yDimension = yDimension;
@@ -36,16 +38,7 @@ public class Graph {
 		 this.nodeAmount = xDimension * yDimension;
 	}
 
-	/*
-	usage: do not use
-	public static Graph getGraph(){
-		if (graph == null){
-			graph = new Graph();
-		}
-		return graph;
-	}
-	*/
-
+	// use to read or create a new graph in Controller.java, after default contructor
 	void setGraph( int xDimension, int yDimension, int maxWeight, int minWeight, int cutsAmount){
 		this.xDimension = xDimension;
 		this.yDimension = yDimension;
@@ -61,6 +54,7 @@ public class Graph {
 		}
 	}
 
+	// method to generate edges of graph
 	void generateGraph(){
 		int maxWeight = this.getMaxWeight();
 		int minWeight = this.getMinWeight();
@@ -113,6 +107,7 @@ public class Graph {
 		}
 	}
 
+	// method to print adjacency list of generated graph
 	void printGraphAdjacencyList(){ // funkcja do sprawdzania działania kodu
 		int nodeAmount = this.getNodeAmount();
 		for ( int i = 0 ; i < nodeAmount; i++)
@@ -124,6 +119,7 @@ public class Graph {
 		}
 	}
 
+	// methos do save prevoiusly generated graph to file
 	public void writeToFile( String Filename){
 		int xDimension = this.getXdimension();
 		int yDimension = this.getYdimension();
@@ -214,6 +210,7 @@ public class Graph {
 		}
 	}
 
+	// method to check if the graph if graph is connected
 	public boolean breathFirstSearch(){
 		int size = this.getNodeAmount();
 		boolean[] visited = new boolean[size];
@@ -249,6 +246,7 @@ public class Graph {
 		return true;
 	}
 
+	// all needed getters
 	public int getMinWeight() {
 		return minWeight;
 	}
