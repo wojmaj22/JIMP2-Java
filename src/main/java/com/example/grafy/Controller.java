@@ -1,9 +1,17 @@
 package com.example.grafy;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.io.IOException;
 
 
 public class Controller {
@@ -12,6 +20,7 @@ public class Controller {
 
 	// a graph we will use later on;
 	private Graph graph = new Graph();
+	private Djikstra djikstra = new Djikstra();
 
 	// these are well described by their names
 	@FXML
@@ -27,13 +36,10 @@ public class Controller {
 	@FXML
 	private  TextField writeFileTextField;
 	@FXML
-	private TextField firstVertexTextField;
-	@FXML
-	private TextField secondVertexTextField;
-
+	private Button resetSourceDestination;
 	// change it?
 	@FXML
-	private Pane drawing;
+	private Pane pane;
 
 	// Button to save graph to file
 	@FXML
@@ -49,6 +55,30 @@ public class Controller {
 	@FXML
 	protected void onReadButtonClick(){
 
+	}
+
+	@FXML
+	protected void onResetSourceDestination(){
+		djikstra.destinationPicked = false;
+		djikstra.sourcePicked = false;
+		//usunąć białe linie tylko jak xd
+	}
+
+	@FXML
+	protected void chooseNodeOnGraph(){
+		pane.setOnMousePressed(mouseEvent -> {
+			Circle circle = (Circle) mouseEvent.getTarget();
+			if( !djikstra.sourcePicked){
+				djikstra.setSource(Integer.parseInt(circle.getId()));
+				circle.setFill(Color.WHITE);
+				djikstra.sourcePicked = true;
+			} else if ( !djikstra.destinationPicked ){
+				djikstra.setDestination(Integer.parseInt(circle.getId()));
+				circle.setFill(Color.WHITE);
+				djikstra.destinationPicked = true;
+			}
+
+		});
 	}
 
 	// Button to generate a graph
@@ -89,7 +119,12 @@ public class Controller {
 
 		graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
-		//graphDrawer.drawGraph( this.graph , drawing);
+		try {
+			graph.drawGraph(pane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	// Button to check if graph is connected
@@ -102,21 +137,20 @@ public class Controller {
 		}
 	}
 
-	// Button to calculate shortest path between Nodes
+	// Button to calculate the shortest path between Nodes
 	@FXML
 	protected void onCheckRouteButton(){
 
-		// to jest chwilowe, bo potem będzie wybierane z myszki
-		int source = Integer.parseInt(firstVertexTextField.getText());
-		int destination = Integer.parseInt(secondVertexTextField.getText());
-
-		Djikstra djikstra = new Djikstra( source, graph.getNodeAmount(), graph);
-
+		int source = djikstra.getSource();
+		int destination = djikstra.getDestination();
+		djikstra.setDjikstra( graph.getNodeAmount(), graph);
+		System.out.println( source + " " + destination);
 		djikstra.calculatePath();
-		djikstra.printPrecursorNode();
-		djikstra.createPath( destination);
+		//djikstra.printPrecursorNode();
+		djikstra.setPath(djikstra.createPath(destination));
 		System.out.println( djikstra.getDistance(destination));
-		System.out.println(djikstra.createPath(destination));
+		System.out.println(djikstra.getPath());
+		djikstra.drawPath( djikstra.getPath(), pane);
 	}
 
 }

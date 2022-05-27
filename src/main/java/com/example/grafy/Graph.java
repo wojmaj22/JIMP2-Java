@@ -1,5 +1,8 @@
 package com.example.grafy;
 
+import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -150,38 +153,29 @@ public class Graph {
 	}
 
 	// Rysowane grafu jest chyba trochę do zmiany, ale to na kiedy indziej
-	public void drawGraph(Graph graph, Pane pane) throws IOException {
+	public void drawGraph( Pane pane) throws IOException {
+		pane.getChildren().removeAll(pane.getChildren());
 		File file = new File("src/main/resources/com/example/grafy/Pasek.png");
 		BufferedImage img = ImageIO.read(file);
-		int xDimension = graph.getXdimension();
-		int yDimension = graph.getYdimension();
-		int maxWeight = graph.getMaxWeight();
+		int xDimension = this.getXdimension();
+		int yDimension = this.getYdimension();
+		int maxWeight = this.getMaxWeight();
 
-		double xLength = 300.0/ xDimension;
-		double yLength = 300.0/ yDimension;
+		double xLength = pane.getWidth()/ xDimension;
+		double yLength = pane.getHeight()/ yDimension;
 		double xPosition = 0.0;
 		double yPosition = 0.0;
 
-		for ( int i = 0; i < xDimension; i++){
-			for ( int j = 0; j < yDimension; j++){
-				Circle circle = new Circle( xPosition, yPosition, 3);
-				pane.getChildren().add(circle);
-				yPosition += yLength;
-			}
-			yPosition = 0.0;
-			xPosition += xLength;
-		}
-		xPosition = 0.0;
-		yPosition = 0.0;
 
 		int currentVertex = 0;
 		for ( int i = 0; i < xDimension-1; i++){
 			for( int j = 0; j < yDimension; j++){
-				double waga = graph.distances[currentVertex].getFirst() / maxWeight;
+				double waga = this.distances[currentVertex].getFirst() / maxWeight;
 				int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
 				Color color = new Color(pixel, true);
 				Line line = new Line( xPosition, yPosition, xPosition+xLength, yPosition);
 				line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")" );
+				line.setStrokeWidth(3);
 				pane.getChildren().add(line);
 				yPosition += yLength;
 				currentVertex++;
@@ -195,12 +189,12 @@ public class Graph {
 		for ( int i = 0; i < xDimension; i++){
 			for( int j = 0; j < yDimension-1; j++){
 				System.out.println(currentVertex +  "-" + (currentVertex+yDimension));
-				System.out.println(graph.vertices[currentVertex].indexOf(currentVertex+xDimension));
-				double waga = graph.distances[currentVertex].get(graph.vertices[currentVertex].indexOf(currentVertex+xDimension)) / maxWeight;
+				double waga = this.distances[currentVertex].get(this.vertices[currentVertex].indexOf(currentVertex+xDimension)) / maxWeight;
 				int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
 				Color color = new Color(pixel, true);
 				Line line = new Line( xPosition, yPosition, xPosition, yPosition+yLength);
 				line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")" );
+				line.setStrokeWidth(3);
 				pane.getChildren().add(line);
 				yPosition += yLength;
 				currentVertex++;
@@ -208,6 +202,22 @@ public class Graph {
 			xPosition += xLength;
 			yPosition = 0.0;
 		}
+
+		xPosition = 0.0;
+		yPosition = 0.0;
+
+		for ( int i = 0; i < xDimension; i++){
+			for ( int j = 0; j < yDimension; j++){
+				Circle circle = new Circle( xPosition, yPosition, 5);
+				String id = String.valueOf(i * xDimension + j);
+				circle.setId(id);
+				pane.getChildren().add(circle);
+				xPosition += xLength;
+			}
+			xPosition = 0.0;
+			yPosition += yLength;
+		}
+
 	}
 
 	// method to check if the graph if graph is connected
@@ -223,8 +233,7 @@ public class Graph {
 		while( queue.size() != 0 ){
 			int currentChecked = queue.peekFirst();
 			System.out.println( " " + currentChecked);
-			LinkedList<Integer> temp = new LinkedList<>();
-			temp = this.vertices[currentChecked];
+			LinkedList<Integer> temp = this.vertices[currentChecked];
 			while( temp.size() != 0){
 				System.out.print( temp);
 				int v = temp.getFirst();

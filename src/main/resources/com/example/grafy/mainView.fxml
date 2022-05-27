@@ -77,9 +77,8 @@
             <Label fx:id="maxEdgeLengthLabel" layoutX="794.0" layoutY="583.0" AnchorPane.rightAnchor="26.0" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="369.0" layoutY="553.0" text="Odległość od wierzchołka" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="398.0" layoutY="583.0" text="Wagi krawędzi" />
-            <TextField fx:id="firstVertexTextField" layoutX="676.0" layoutY="94.0" prefHeight="26.0" prefWidth="71.0" promptText="tymczasowe do odległości" />
-            <TextField fx:id="secondVertexTextField" layoutX="752.0" layoutY="94.0" prefHeight="26.0" prefWidth="71.0" promptText="tymczasowe" />
-            <Pane fx:id="drawing" layoutX="14.0" layoutY="94.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="90.0" />
+            <Pane fx:id="pane" layoutX="14.0" layoutY="94.0" onMousePressed="#chooseNodeOnGraph" prefHeight="400.0" prefWidth="400.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="94.0" />
+            <Button fx:id="resetSourceDestination" layoutX="730.0" layoutY="94.0" mnemonicParsing="false" onAction="#onResetSourceDestination" text="Reset choices" />
          </children>
     </AnchorPane>
   </children>
