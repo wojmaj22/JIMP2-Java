@@ -2,15 +2,12 @@ package com.example.grafy;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.awt.*;
-import java.awt.color.ColorSpace;
 import java.io.IOException;
 
 
@@ -37,9 +34,16 @@ public class Controller {
 	private  TextField writeFileTextField;
 	@FXML
 	private Button resetSourceDestination;
-	// change it?
 	@FXML
-	private Pane pane;
+	private Label graphConnected;
+	@FXML
+	private Label sourceNode;
+	@FXML
+	private Label destinationNode;
+	@FXML
+	private Label distance;
+	@FXML
+	private Pane graphDrawing;
 
 	// Button to save graph to file
 	@FXML
@@ -58,23 +62,28 @@ public class Controller {
 	}
 
 	@FXML
-	protected void onResetSourceDestination(){
+	protected void onResetSourceDestination() throws IOException {
 		djikstra.destinationPicked = false;
 		djikstra.sourcePicked = false;
-		//usunąć białe linie tylko jak xd
+		graph.DrawGraph(graphDrawing);
+		destinationNode.setText("");
+		sourceNode.setText("");
+		distance.setText("");
 	}
 
 	@FXML
 	protected void chooseNodeOnGraph(){
-		pane.setOnMousePressed(mouseEvent -> {
+		graphDrawing.setOnMousePressed(mouseEvent -> {
 			Circle circle = (Circle) mouseEvent.getTarget();
 			if( !djikstra.sourcePicked){
 				djikstra.setSource(Integer.parseInt(circle.getId()));
 				circle.setFill(Color.WHITE);
+				sourceNode.setText(circle.getId());
 				djikstra.sourcePicked = true;
 			} else if ( !djikstra.destinationPicked ){
 				djikstra.setDestination(Integer.parseInt(circle.getId()));
 				circle.setFill(Color.WHITE);
+				destinationNode.setText(circle.getId());
 				djikstra.destinationPicked = true;
 			}
 
@@ -83,11 +92,11 @@ public class Controller {
 
 	// Button to generate a graph
 	@FXML
-	protected void onGenerateButtonClick( ) { // zmienić w przypadku braku wczytanego argumentu
+	protected void onGenerateButtonClick( ) throws IOException { // zmienić w przypadku braku wczytanego argumentu
 		String weight;
 		String dimensions;
-		int minWeight = 0;
-		int maxWeight = 5;
+		Double minWeight = 0.0;
+		Double maxWeight = 5.0;
 		int xDimension = 10;
 		int yDimension = 10;
 		int amountOfCuts = 0;
@@ -101,8 +110,8 @@ public class Controller {
 		}
 		try { // read weight of edges
 			weight = edgeLengthTextField.getText();
-			minWeight = Integer.parseInt( weight.substring( 0, weight.indexOf("-")));
-			maxWeight = Integer.parseInt( weight.substring( weight.indexOf("-") + 1));
+			minWeight = Double.parseDouble( weight.substring( 0, weight.indexOf("-")));
+			maxWeight = Double.parseDouble( weight.substring( weight.indexOf("-") + 1));
 		} catch ( Exception e){
 			edgeLengthTextField.setText("0-5");
 		}
@@ -114,16 +123,25 @@ public class Controller {
 		minEdgeLengthLabel.setText(String.valueOf(minWeight));
 		maxEdgeLengthLabel.setText(String.valueOf(maxWeight));
 
+		djikstra.destinationPicked = false;
+		djikstra.sourcePicked = false;
+		graph.DrawGraph(graphDrawing);
+		destinationNode.setText("");
+		sourceNode.setText("");
+		distance.setText("");
+		graphConnected.setText("");
+
 		graph.setGraph( xDimension, yDimension, maxWeight, minWeight, amountOfCuts); // setting graph properties
 		graph.generateGraph(); // generating graph edges
 
 		graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
-		try {
-			graph.drawGraph(pane);
+		graph.DrawGraph(graphDrawing);
+		/*try {
+			graph.drawGraph(graphDrawing);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 
@@ -131,26 +149,33 @@ public class Controller {
 	@FXML
 	protected void onBfsButton(){
 		if (graph.breathFirstSearch()){
-			System.out.println("Graf jest spójny");
+			//System.out.println("Graf jest spójny");
+			graphConnected.setText("Spójny");
 		} else {
-			System.out.println("Graf nie jest spójny");
+			//System.out.println("Graf nie jest spójny");
+			graphConnected.setText("Niespójny");
 		}
+		graph.printGraphAdjacencyList();
 	}
 
 	// Button to calculate the shortest path between Nodes
 	@FXML
 	protected void onCheckRouteButton(){
 
-		int source = djikstra.getSource();
 		int destination = djikstra.getDestination();
 		djikstra.setDjikstra( graph.getNodeAmount(), graph);
-		System.out.println( source + " " + destination);
-		djikstra.calculatePath();
-		//djikstra.printPrecursorNode();
-		djikstra.setPath(djikstra.createPath(destination));
-		System.out.println( djikstra.getDistance(destination));
-		System.out.println(djikstra.getPath());
-		djikstra.drawPath( djikstra.getPath(), pane);
+		//System.out.println( source + " " + destination);
+		try {
+
+			djikstra.calculatePath();
+			//djikstra.printPrecursorNode();
+			djikstra.createPath(destination);
+			//System.out.println(djikstra.getPath());
+			djikstra.drawPath(djikstra.getPath(), graphDrawing);
+		} catch ( Exception e){
+			distance.setText("Operacja niemożliwa");
+		}
+		distance.setText(String.valueOf(djikstra.getDistance(djikstra.getDestination())));
 	}
 
 }

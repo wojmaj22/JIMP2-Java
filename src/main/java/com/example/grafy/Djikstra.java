@@ -8,41 +8,13 @@ import java.util.LinkedList;
 
 public class Djikstra {
 
-	// tu cała struktura jest do zmiany tych metod itd.
 	private Graph graph; // point which graph are we using
-
-	public int getSource() {
-		return source;
-	}
-
-	public void setSource(int source) {
-		this.source = source;
-	}
-
 	private int source; // source from which we finde the shortest paths
-
-	public int getDestination() {
-		return destination;
-	}
-
-	public void setDestination(int destination) {
-		this.destination = destination;
-	}
-
 	private int destination;
 	boolean destinationPicked = false;
 	boolean sourcePicked = false;
-	private Integer[] previousNode; // array of prevoius nodes in the shortest path from source
+	private Integer[] previousNode; // array of previous nodes in the shortest path from source
 	private Double [] distances; // array of the shortest distances from source
-
-	public LinkedList<Integer> getPath() {
-		return path;
-	}
-
-	public void setPath(LinkedList<Integer> path) {
-		this.path = path;
-	}
-	// do zmiany
 	private LinkedList<Integer> path;
 
 	// Djikstra basic contructor
@@ -88,6 +60,7 @@ public class Djikstra {
 			}
 		}
 		distances = distance;
+		System.out.println(distances[2]);
 		previousNode = precursor;
 	}
 
@@ -113,7 +86,7 @@ public class Djikstra {
 	}
 
 	// method to create a path to our destination node
-	LinkedList<Integer> createPath( int destination){
+	void createPath( int destination){
 		LinkedList<Integer> path = new LinkedList<>();
 		int currentNode = destination;
 		while( currentNode != source){
@@ -121,16 +94,17 @@ public class Djikstra {
 			currentNode = previousNode[currentNode];
 		}
 		path.add(currentNode);
-		return path;
+		this.path = path;
 	}
 
 	void drawPath(LinkedList<Integer> path, Pane pane){
-		double xLength = pane.getWidth()/ this.graph.getXdimension();
-		double yLength = pane.getHeight()/ this.graph.getYdimension();
+		double xLength = pane.getWidth()/ (this.graph.getXdimension()-1);
+		double yLength = pane.getHeight()/ (this.graph.getYdimension()-1);
 		for( int i = 0; i < path.size()-1; i++){
 			int yStart = (int) (path.get(i) / this.graph.getXdimension() * yLength);
-			double xStart = path.get(i) % this.graph.getYdimension() * xLength;
-			System.out.println( xStart + " | " + yStart);
+			double xStart = (path.get(i) % this.graph.getXdimension()) * xLength;
+			//System.out.println( path.get(i) % this.graph.getYdimension() + " " + (path.get(i) % this.graph.getXdimension()) * xLength);
+			//System.out.println( xStart + " | " + yStart);
 			Line line = new Line();
 			line.setStyle("-fx-stroke: White");
 			line.setStrokeWidth(2);
@@ -145,18 +119,16 @@ public class Djikstra {
 			} else if ( path.get(i+1) - this.graph.getXdimension() == path.get(i)){
 				line.setEndX( xStart);
 				line.setEndY( yStart + yLength);
-				System.out.println("3" + ( yStart + yLength));
 			} else if ( path.get(i+1) + this.graph.getXdimension() == path.get(i)){
 				line.setEndX( xStart);
 				line.setEndY( yStart - yLength);
-				System.out.println("4");
 			}
 			pane.getChildren().add(line);
 		}
 
 	}
 
-	// all needed getters
+	// all needed getters and setters
 	public Integer[] getPreviousNode() {
 		return previousNode;
 	}
@@ -165,6 +137,24 @@ public class Djikstra {
 	}
 	public Double getDistance( int index){
 		return distances[index];
+	}
+	public int getSource() {
+		return source;
+	}
+	public void setSource(int source) {
+		this.source = source;
+	}
+	public int getDestination() {
+		return destination;
+	}
+	public void setDestination(int destination) {
+		this.destination = destination;
+	}
+	public LinkedList<Integer> getPath() {
+		return path;
+	}
+	public void setPath(LinkedList<Integer> path) {
+		this.path = path;
 	}
 
 }
