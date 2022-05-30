@@ -53,6 +53,16 @@ public class Graph {
 		}
 	}
 
+	void setGraph2 ( int xDimension, int yDimension, Double maxWeight, Double minWeight, LinkedList<Integer>[] vertices, LinkedList<Double>[] distances){
+		this.xDimension = xDimension;
+		this.yDimension = yDimension;
+		this.maxWeight = maxWeight;
+		this.minWeight = minWeight;
+		this.vertices = vertices;
+		this.distances = distances;
+		this.nodeAmount = xDimension * yDimension;
+	}
+
 	// method to generate edges of graph
 	void generateGraph(){
 		Double maxWeight = this.getMaxWeight();
@@ -183,8 +193,8 @@ public class Graph {
 		for ( int i = 0 ; i < nodeAmount; i++)
 		{
 			System.out.print( i );
-			System.out.print( this.distances[i]);
-			System.out.print( this.vertices[i]);
+			System.out.print( distances[i]);
+			System.out.print( vertices[i]);
 			System.out.println();
 		}
 	}
@@ -219,85 +229,6 @@ public class Graph {
 		}
 	}
 
-	// Dodać zmianę wielkości kropek i linii w zależności od rozmiaru grafu
-	public void drawGraph( Pane pane) throws IOException {
-		pane.getChildren().removeAll(pane.getChildren());
-		File file = new File("src/main/resources/com/example/grafy/Pasek.png");
-		BufferedImage img = ImageIO.read(file);
-		int xDimension = this.getXdimension();
-		int yDimension = this.getYdimension();
-		Double maxWeight = this.getMaxWeight();
-
-		double xLength = pane.getWidth()/ (xDimension-1);
-		double yLength = pane.getHeight()/ (yDimension-1);
-		double xPosition = 0.0;
-		double yPosition = 0.0;
-
-
-		int currentVertex = 0;
-		for ( int i = 0; i < xDimension-1; i++){
-			for( int j = 0; j < yDimension; j++){
-				try {
-					if (distances[currentVertex].getFirst() - 1 == currentVertex) {
-						double waga = this.distances[currentVertex].getFirst() / maxWeight;
-						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
-						Color color = new Color(pixel, true);
-						Line line = new Line(xPosition, yPosition, xPosition + xLength, yPosition);
-						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
-						line.setStrokeWidth(3);
-						pane.getChildren().add(line);
-					}
-				} catch ( Exception exception){
-					System.out.println(currentVertex);
-				}
-				yPosition += yLength;
-				currentVertex++;
-			}
-			xPosition += xLength;
-			yPosition = 0.0;
-		}
-		xPosition = 0.0;
-		currentVertex = 0;
-		for ( int i = 0; i < xDimension; i++){
-			for( int j = 0; j < yDimension-1; j++){
-				try {
-					if (distances[currentVertex].get(2) - xDimension == currentVertex) {
-						//System.out.println(currentVertex +  "-" + (currentVertex+yDimension));
-						double waga = this.distances[currentVertex].get(this.vertices[currentVertex].indexOf(currentVertex + xDimension)) / maxWeight;
-						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
-						Color color = new Color(pixel, true);
-						Line line = new Line(xPosition, yPosition, xPosition, yPosition + yLength);
-						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
-						line.setStrokeWidth(3);
-						pane.getChildren().add(line);
-					}
-				} catch ( Exception exception){
-					System.out.println(currentVertex);
-				}
-				yPosition += yLength;
-				currentVertex++;
-			}
-			xPosition += xLength;
-			yPosition = 0.0;
-		}
-
-		xPosition = 0.0;
-		yPosition = 0.0;
-
-		for ( int i = 0; i < xDimension; i++){
-			for ( int j = 0; j < yDimension; j++){
-				Circle circle = new Circle( xPosition, yPosition, 5);
-				String id = String.valueOf(i * xDimension + j);
-				circle.setId(id);
-				pane.getChildren().add(circle);
-				xPosition += xLength;
-			}
-			xPosition = 0.0;
-			yPosition += yLength;
-		}
-
-	}
-
 	public void DrawGraph( Pane pane) throws IOException {
 		pane.getChildren().removeAll(pane.getChildren());
 		File file = new File("src/main/resources/com/example/grafy/Pasek.png");
@@ -306,10 +237,27 @@ public class Graph {
 		int yDimension = this.getYdimension();
 		Double maxWeight = this.getMaxWeight();
 
-		double xLength = pane.getWidth()/ (xDimension-1);
-		double yLength = pane.getHeight()/ (yDimension-1);
-		double xPosition = 0.0;
-		double yPosition = 0.0;
+		double xLength;
+		double yLength;
+		double xPosition;
+		double yPosition;
+		if( xDimension <= 33){
+			pane.setPrefWidth( 680);
+			xLength = 660.0 / (xDimension-1);
+		} else {
+			xLength = 20;
+			pane.setPrefWidth(xLength * xDimension + 10);
+		}
+		if( yDimension <= 33 ){
+			pane.setPrefHeight( 680);
+			yLength = 660.0 / (yDimension-1);
+		} else {
+			yLength = 20;
+			pane.setPrefHeight(yLength * yDimension + 10);
+		}
+		pane.setStyle("-fx-background-color: Gray");
+		xPosition = 10.0;
+		yPosition = 10.0;
 		// dodać tu jeszcze kolorowanie tych krawędzi
 		// może jakoś zrobić, żeby nie dublować tych linii
 		int currentVertex = 0;
@@ -322,24 +270,16 @@ public class Graph {
 						Color color = new Color(pixel, true);
 						Line line = new Line(xPosition, yPosition, xPosition + xLength, yPosition);
 						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
-						line.setStrokeWidth(3);
+						line.setStrokeWidth(4);
 						pane.getChildren().add(line);
-					} else if ( vertices[currentVertex].get(k) == currentVertex - 1){ // lewo
-						//Line line = new Line(xPosition, yPosition, xPosition - xLength, yPosition);
-						//line.setStrokeWidth(3);
-						//pane.getChildren().add(line);
 					} else if ( vertices[currentVertex].get(k) == currentVertex + xDimension){ // dół
 						double waga = this.distances[currentVertex].get(this.vertices[currentVertex].indexOf(currentVertex + xDimension)) / maxWeight;
 						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
 						Color color = new Color(pixel, true);
 						Line line = new Line(xPosition, yPosition, xPosition, yPosition + yLength);
 						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
-						line.setStrokeWidth(3);
+						line.setStrokeWidth(4);
 						pane.getChildren().add(line);
-					} else if ( vertices[currentVertex].get(k) == currentVertex - xDimension){ // góra
-						//Line line = new Line(xPosition, yPosition, xPosition, yPosition - yLength);
-						//line.setStrokeWidth(3);
-						//pane.getChildren().add(line);
 					}
 
 				}
@@ -347,20 +287,20 @@ public class Graph {
 				currentVertex++;
 			}
 			yPosition += yLength;
-			xPosition = 0;
+			xPosition = 10;
 		}
-		xPosition = 0.0;
-		yPosition = 0.0;
+		yPosition = 10.0;
 
 		for ( int i = 0; i < yDimension; i++){
 			for ( int j = 0; j < xDimension; j++){
 				Circle circle = new Circle( xPosition, yPosition, 5);
 				String id = String.valueOf(i * xDimension + j);
+				circle.setStyle("-fx-color: Black");
 				circle.setId(id);
 				pane.getChildren().add(circle);
 				xPosition += xLength;
 			}
-			xPosition = 0.0;
+			xPosition = 10.0;
 			yPosition += yLength;
 
 		}

@@ -1,9 +1,7 @@
 package com.example.grafy;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -33,7 +31,7 @@ public class Controller {
 	@FXML
 	private  TextField writeFileTextField;
 	@FXML
-	private Button resetSourceDestination;
+	private TextField readFileTextField;
 	@FXML
 	private Label graphConnected;
 	@FXML
@@ -44,6 +42,8 @@ public class Controller {
 	private Label distance;
 	@FXML
 	private Pane graphDrawing;
+	@FXML
+	private ScrollPane scrollPane;
 
 	// Button to save graph to file
 	@FXML
@@ -58,7 +58,17 @@ public class Controller {
 	// Button to read a graph from file
 	@FXML
 	protected void onReadButtonClick(){
-
+		String filename = "Data\\" + readFileTextField.getText();
+		GraphReader graphReader = new GraphReader( filename);
+		graphReader.readGraph( graph);
+		try {
+			graph.DrawGraph(graphDrawing);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		minEdgeLengthLabel.setText(String.valueOf(graph.getMinWeight()));
+		maxEdgeLengthLabel.setText(String.valueOf(graph.getMaxWeight()));
+		graph.printGraphAdjacencyList();
 	}
 
 	@FXML
@@ -136,6 +146,8 @@ public class Controller {
 
 		graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
+		//scrollPane.setContent( graphDrawing);
+
 		graph.DrawGraph(graphDrawing);
 		/*try {
 			graph.drawGraph(graphDrawing);
@@ -155,7 +167,7 @@ public class Controller {
 			//System.out.println("Graf nie jest spójny");
 			graphConnected.setText("Niespójny");
 		}
-		graph.printGraphAdjacencyList();
+		//graph.printGraphAdjacencyList();
 	}
 
 	// Button to calculate the shortest path between Nodes
@@ -170,12 +182,32 @@ public class Controller {
 			djikstra.calculatePath();
 			//djikstra.printPrecursorNode();
 			djikstra.createPath(destination);
-			//System.out.println(djikstra.getPath());
+			System.out.println(djikstra.getPath());
 			djikstra.drawPath(djikstra.getPath(), graphDrawing);
 		} catch ( Exception e){
 			distance.setText("Operacja niemożliwa");
 		}
-		distance.setText(String.valueOf(djikstra.getDistance(djikstra.getDestination())));
+		String dist = String.valueOf(djikstra.getDistance(djikstra.getDestination()));
+		dist = dist.substring(0, dist.indexOf(".")+3);
+
+		distance.setText( dist);
+	}
+	@FXML
+	private void showManual(){
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setHeaderText("Pomoc programu");
+		alert.setHeight(500);
+		alert.setContentText("Program do generowania grafów, sprawdzania spójności grafów oraz oblicznia ścieżek pomiędzy wierzchołkami.\n" +
+				"W celu wygenerowania grafu należy podać jego wymiar, zakres wag krawędzi oraz ilość cięć grafu.\n" +
+				"W przypadku braku argumentów zostaną użyte wartości domyślne - wymiary 5x5, zakres wag 0-5, ilość cięć 0.\n" +
+				"Nastęnie można zapisać wygenerowany graf, wpisująć nazwę pliku do zapisu w odpowiednim polu i kliknąć \"zapisz\"\n" +
+				"Aby sprawdzić spójność należy najpierw wygenerować graf lub wczytać go za pomocą odpowiedniego pola, a nastepnie kliknąć \"Sprawdź spójność\".\n" +
+				"Aby obliczyć ścieżkę pomiędzy wierzchołkami należy najpierw wygenerować graf lub wczytać go za pomocą odpowiedniego pola,\n" +
+				"a następnie wybrać na graficznej ilustacji grafu wierzchołki, i kliknąć \"Oblicz drogę\".\n" +
+				"Aby obliczyć drogę pomiędzy innymi wierzchołkami wczytanego grafu należy zresetować wybór za pomocą odpowiedniego przycisku.\n");
+		// tutaj poprawić
+
+		alert.show();
 	}
 
 }

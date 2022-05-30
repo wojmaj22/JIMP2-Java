@@ -14,6 +14,7 @@ public class Application extends javafx.application.Application {
 		stage.setTitle("Program do grafów");
 		stage.setScene(scene);
 		stage.setResizable(false);
+
 		stage.show();
 	}
 

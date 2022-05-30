@@ -49,18 +49,21 @@ public class Djikstra {
 		precursor[0] = 0;
 		for( int i = 0; i < amount; i++){
 			int u = getLowestNotVisited( amount, distance, visited);
+			System.out.println(i + " | " + u);
 			visited[u] = true;
 			LinkedList<Double> distances = graph.getDistances(u);
 			LinkedList<Integer> vertices = graph.getVertices(u);
 			for(int j = 0; j < distances.size(); j++){
+				//System.out.println( distance[u] + "+" + distances.get(j) + " = " + (distance[u] + distances.get(j)) + " || " + distance[vertices.get(j)]);
 				if((distance[u] + distances.get(j)) < distance[vertices.get(j)]){
 					distance[vertices.get(j)] = distance[u] + distances.get(j);
 					precursor[vertices.get(j)] = u;
 				}
+				//System.out.println( vertices.get(j) + ": " + distance[vertices.get(j)]);
 			}
 		}
 		distances = distance;
-		System.out.println(distances[2]);
+
 		previousNode = precursor;
 	}
 
@@ -69,8 +72,11 @@ public class Djikstra {
 		int minIndex = 0;
 		Double minDistance = Double.MAX_VALUE;
 		for( int i = 0; i < amount; i++){
-			if( !visited[i] && distance[i] < minDistance){
-				minIndex = i;
+			if( distance[i] < minDistance){
+				if( !visited[i]){
+					minDistance = distance[i];
+					minIndex = i;
+				}
 			}
 		}
 		return minIndex;
@@ -98,11 +104,23 @@ public class Djikstra {
 	}
 
 	void drawPath(LinkedList<Integer> path, Pane pane){
-		double xLength = pane.getWidth()/ (this.graph.getXdimension()-1);
-		double yLength = pane.getHeight()/ (this.graph.getYdimension()-1);
+		double xLength;
+		double yLength;
+		double xStart;
+		double yStart;
+		if( graph.getXdimension() <= 33){
+			xLength = 660.0 / (this.graph.getXdimension()-1);
+		} else {
+			xLength = 20;
+		}
+		if ( graph.getYdimension() <= 33){
+			yLength = 660.0 / (this.graph.getYdimension()-1);
+		} else {
+			yLength = 20;
+		}
 		for( int i = 0; i < path.size()-1; i++){
-			int yStart = (int) (path.get(i) / this.graph.getXdimension() * yLength);
-			double xStart = (path.get(i) % this.graph.getXdimension()) * xLength;
+			yStart = (int) (path.get(i) / this.graph.getXdimension() * yLength) +10;
+			xStart = ((path.get(i) % this.graph.getXdimension()) * xLength ) +10;
 			//System.out.println( path.get(i) % this.graph.getYdimension() + " " + (path.get(i) % this.graph.getXdimension()) * xLength);
 			//System.out.println( xStart + " | " + yStart);
 			Line line = new Line();
