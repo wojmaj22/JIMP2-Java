@@ -1,16 +1,22 @@
 package com.example.grafy;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+
+
 
 public class Graph {
 
@@ -229,7 +235,8 @@ public class Graph {
 		}
 	}
 
-	public void DrawGraph( Pane pane) throws IOException {
+	//to jest troche chujowe
+	public void drawGraph( Pane pane) throws IOException {
 		pane.getChildren().removeAll(pane.getChildren());
 		File file = new File("src/main/resources/com/example/grafy/Pasek.png");
 		BufferedImage img = ImageIO.read(file);
@@ -237,23 +244,116 @@ public class Graph {
 		int yDimension = this.getYdimension();
 		Double maxWeight = this.getMaxWeight();
 
+		Canvas drawing = new Canvas();
 		double xLength;
 		double yLength;
 		double xPosition;
 		double yPosition;
-		if( xDimension <= 33){
+		if( xDimension <= 34){
+			pane.setPrefWidth( 680);
+			xLength = 660.0 / (xDimension-1);
+			drawing.setWidth(680);
+		} else {
+			xLength = 10;
+			pane.setPrefWidth(xLength * xDimension );
+			drawing.setWidth(20 * xDimension);
+		}
+		if( yDimension <= 34 ){
+			pane.setPrefHeight( 680);
+			yLength = 660.0 / (yDimension-1);
+			drawing.setHeight( 680);
+		} else {
+			yLength = 10;
+			pane.setPrefHeight(yLength * yDimension );
+			drawing.setHeight( yLength * yDimension);
+		}
+		//pane.setStyle("-fx-background-color: Gray");
+		GraphicsContext gc = drawing.getGraphicsContext2D();
+		gc.setLineWidth(2);
+		gc.setFill(Color.WHITE);
+		xPosition = 10.0;
+		yPosition = 10.0;
+		// dodać tu jeszcze kolorowanie tych krawędzi
+		// może jakoś zrobić, żeby nie dublować tych linii
+		int currentVertex = 0;
+		for ( int i = 0; i < yDimension; i++){
+			for( int j = 0; j < xDimension; j++){
+				for ( int k = 0; k < vertices[currentVertex].size(); k++){
+					if( vertices[currentVertex].get(k) == currentVertex + 1){ // prawo
+						double waga = this.distances[currentVertex].getFirst() / maxWeight;
+						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
+						//Color color = new Color(pixel, true);
+						//Line line = new Line(xPosition, yPosition, xPosition + xLength, yPosition);
+						//line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
+						//line.setStrokeWidth(4);
+						//pane.getChildren().add(line);
+						//gc.setFill(javafx.scene.paint.Paint.valueOf(String.valueOf(color)));
+						gc.strokeLine( xPosition, yPosition,xPosition+xLength, yPosition);
+					} else if ( vertices[currentVertex].get(k) == currentVertex + xDimension){ // dół
+						double waga = this.distances[currentVertex].get(this.vertices[currentVertex].indexOf(currentVertex + xDimension)) / maxWeight;
+						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
+						//Color color = new Color(pixel, true);
+						//gc.setFill(javafx.scene.paint.Paint.valueOf(String.valueOf(color)));
+						//Line line = new Line(xPosition, yPosition, xPosition, yPosition + yLength);
+						//line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
+						//line.setStrokeWidth(4);
+						//pane.getChildren().add(line);
+						gc.strokeLine( xPosition, yPosition, xPosition, yPosition+yLength);
+					}
+
+				}
+				xPosition += xLength;
+				currentVertex++;
+			}
+			yPosition += yLength;
+			xPosition = 10;
+		}
+		yPosition = 10.0;
+
+		for ( int i = 0; i < yDimension; i++){
+			for ( int j = 0; j < xDimension; j++){
+				gc.setFill(javafx.scene.paint.Paint.valueOf("BLACK"));
+				gc.strokeOval( xPosition-2, yPosition-2, 4, 4);
+				//Circle circle = new Circle( xPosition, yPosition, 5);
+				//String id = String.valueOf(i * xDimension + j);
+				//circle.setStyle("-fx-color: Black");
+				//circle.setId(id);
+				//pane.getChildren().add(circle);
+				xPosition += xLength;
+			}
+			xPosition = 10.0;
+			yPosition += yLength;
+
+		}
+		pane.getChildren().add(drawing);
+	}
+
+	public void DrawGraph( Pane pane) throws IOException {
+		pane.getChildren().removeAll(pane.getChildren());
+		File file = new File("src/main/resources/com/example/grafy/Pasek.png");
+		Image image = new Image(getClass().getResourceAsStream("Pasek.png"));
+		int xDimension = this.getXdimension();
+		int yDimension = this.getYdimension();
+		Double maxWeight = this.getMaxWeight();
+		PixelReader pixelReader = image.getPixelReader();
+
+		double xLength;
+		double yLength;
+		double xPosition;
+		double yPosition;
+		if( xDimension <= 34){
 			pane.setPrefWidth( 680);
 			xLength = 660.0 / (xDimension-1);
 		} else {
 			xLength = 20;
-			pane.setPrefWidth(xLength * xDimension + 10);
+			pane.setPrefWidth(xLength * xDimension );
 		}
-		if( yDimension <= 33 ){
+		if( yDimension <= 34 ){
 			pane.setPrefHeight( 680);
 			yLength = 660.0 / (yDimension-1);
 		} else {
 			yLength = 20;
-			pane.setPrefHeight(yLength * yDimension + 10);
+			pane.setPrefHeight(yLength * yDimension );
 		}
 		pane.setStyle("-fx-background-color: Gray");
 		xPosition = 10.0;
@@ -266,18 +366,18 @@ public class Graph {
 				for ( int k = 0; k < vertices[currentVertex].size(); k++){
 					if( vertices[currentVertex].get(k) == currentVertex + 1){ // prawo
 						double waga = this.distances[currentVertex].getFirst() / maxWeight;
-						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
-						Color color = new Color(pixel, true);
+						//int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
+						Color color = pixelReader.getColor((int) (waga * image.getWidth()), 5 );
 						Line line = new Line(xPosition, yPosition, xPosition + xLength, yPosition);
-						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
+						line.setStyle("-fx-stroke: rgb(" + color.getRed()*255 + "," + color.getGreen()*255 + "," + color.getBlue()*255 + ")");
 						line.setStrokeWidth(4);
 						pane.getChildren().add(line);
 					} else if ( vertices[currentVertex].get(k) == currentVertex + xDimension){ // dół
 						double waga = this.distances[currentVertex].get(this.vertices[currentVertex].indexOf(currentVertex + xDimension)) / maxWeight;
-						int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
-						Color color = new Color(pixel, true);
+						//int pixel = img.getRGB((int) (waga * img.getWidth()), 5);
+						Color color = pixelReader.getColor((int) (waga * image.getWidth()), 5 );
 						Line line = new Line(xPosition, yPosition, xPosition, yPosition + yLength);
-						line.setStyle("-fx-stroke: rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")");
+						line.setStyle("-fx-stroke: rgb(" + color.getRed()*255 + "," + color.getGreen()*255 + "," + color.getBlue()*255 + ")");
 						line.setStrokeWidth(4);
 						pane.getChildren().add(line);
 					}

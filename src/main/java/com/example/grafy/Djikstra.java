@@ -41,19 +41,27 @@ public class Djikstra {
 		Double[] distance = new Double[amount];
 		boolean[] visited = new boolean[amount];
 		Integer[] precursor = new Integer[amount];
+		LinkedList<Integer> queue = new LinkedList<>();
 		for (int i = 0; i < amount; i++) {
 			distance[i] = Double.MAX_VALUE;
 			visited[i] = false;
 		}
 		distance[source] = 0.0;
+		visited[source] = true;
 		precursor[0] = 0;
+		queue.add(source);
 		for( int i = 0; i < amount; i++){
-			int u = getLowestNotVisited( amount, distance, visited);
-			System.out.println(i + " | " + u);
+			//int u = getLowestNotVisited( amount, distance, visited);
+			int u = getLowest( queue, distance);
+			//System.out.println(i + " | " + u);
 			visited[u] = true;
 			LinkedList<Double> distances = graph.getDistances(u);
 			LinkedList<Integer> vertices = graph.getVertices(u);
 			for(int j = 0; j < distances.size(); j++){
+				if ( !visited[vertices.get(j)]){
+					queue.add(vertices.get(j));
+					visited[vertices.get(j)] = true;
+				}
 				//System.out.println( distance[u] + "+" + distances.get(j) + " = " + (distance[u] + distances.get(j)) + " || " + distance[vertices.get(j)]);
 				if((distance[u] + distances.get(j)) < distance[vertices.get(j)]){
 					distance[vertices.get(j)] = distance[u] + distances.get(j);
@@ -61,9 +69,12 @@ public class Djikstra {
 				}
 				//System.out.println( vertices.get(j) + ": " + distance[vertices.get(j)]);
 			}
+//			if( visited[destination]){
+//				break;
+//			}
+			queue.remove((Integer) u);
 		}
 		distances = distance;
-
 		previousNode = precursor;
 	}
 
@@ -80,6 +91,18 @@ public class Djikstra {
 			}
 		}
 		return minIndex;
+	}
+
+	private int getLowest( LinkedList<Integer> Nodes, Double[] distances){
+		Double minDistance = Double.MAX_VALUE;
+		int lowestInd = 0;
+		for( int i = 0; i < Nodes.size(); i++){
+			if( distances[Nodes.get(i)] < minDistance){
+				lowestInd = Nodes.get(i);
+				minDistance = distances[Nodes.get(i)];
+			}
+		}
+		return lowestInd;
 	}
 
 	// method to print previousNode array
@@ -108,15 +131,19 @@ public class Djikstra {
 		double yLength;
 		double xStart;
 		double yStart;
-		if( graph.getXdimension() <= 33){
+		if( graph.getXdimension() <= 34){
+			pane.setPrefWidth( 680);
 			xLength = 660.0 / (this.graph.getXdimension()-1);
 		} else {
 			xLength = 20;
+			pane.setPrefWidth(xLength * this.graph.getXdimension() );
 		}
-		if ( graph.getYdimension() <= 33){
+		if ( graph.getYdimension() <= 34){
+			pane.setPrefHeight( 680);
 			yLength = 660.0 / (this.graph.getYdimension()-1);
 		} else {
 			yLength = 20;
+			pane.setPrefHeight(xLength * this.graph.getYdimension() );
 		}
 		for( int i = 0; i < path.size()-1; i++){
 			yStart = (int) (path.get(i) / this.graph.getXdimension() * yLength) +10;
@@ -125,6 +152,7 @@ public class Djikstra {
 			//System.out.println( xStart + " | " + yStart);
 			Line line = new Line();
 			line.setStyle("-fx-stroke: White");
+			line.setId("path");
 			line.setStrokeWidth(2);
 			line.setStartX( xStart);
 			line.setStartY( yStart);
@@ -143,7 +171,6 @@ public class Djikstra {
 			}
 			pane.getChildren().add(line);
 		}
-
 	}
 
 	// all needed getters and setters

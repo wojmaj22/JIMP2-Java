@@ -7,11 +7,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 
 public class Controller {
-
-	// Ogarnąć wyjątki itd. sprawdzić, czy to jest OK?
 
 	// a graph we will use later on;
 	private Graph graph = new Graph();
@@ -42,9 +41,6 @@ public class Controller {
 	private Label distance;
 	@FXML
 	private Pane graphDrawing;
-	@FXML
-	private ScrollPane scrollPane;
-
 	// Button to save graph to file
 	@FXML
 	protected void onSaveButtonClick(){
@@ -75,7 +71,7 @@ public class Controller {
 	protected void onResetSourceDestination() throws IOException {
 		djikstra.destinationPicked = false;
 		djikstra.sourcePicked = false;
-		graph.DrawGraph(graphDrawing);
+		//graph.DrawGraph(graphDrawing);
 		destinationNode.setText("");
 		sourceNode.setText("");
 		distance.setText("");
@@ -83,8 +79,14 @@ public class Controller {
 
 	@FXML
 	protected void chooseNodeOnGraph(){
+
 		graphDrawing.setOnMousePressed(mouseEvent -> {
-			Circle circle = (Circle) mouseEvent.getTarget();
+			Circle circle = new Circle();
+			try {
+				circle = (Circle) mouseEvent.getTarget();
+			} catch ( Exception exception){
+				System.out.println("Nie wybrano wierzchołka");
+			}
 			if( !djikstra.sourcePicked){
 				djikstra.setSource(Integer.parseInt(circle.getId()));
 				circle.setFill(Color.WHITE);
@@ -140,21 +142,24 @@ public class Controller {
 		sourceNode.setText("");
 		distance.setText("");
 		graphConnected.setText("");
-
 		graph.setGraph( xDimension, yDimension, maxWeight, minWeight, amountOfCuts); // setting graph properties
 		graph.generateGraph(); // generating graph edges
 
-		graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
+		//graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
 		//scrollPane.setContent( graphDrawing);
 
-		graph.DrawGraph(graphDrawing);
+		try {
+			graph.DrawGraph(graphDrawing);
+			//graph.drawGraph(graphDrawing);
+		} catch ( Exception e){
+			e.printStackTrace();
+		}
 		/*try {
 			graph.drawGraph(graphDrawing);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}*/
-
 	}
 
 	// Button to check if graph is connected
