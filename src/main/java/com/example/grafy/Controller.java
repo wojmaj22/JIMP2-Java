@@ -71,7 +71,7 @@ public class Controller {
 	protected void onResetSourceDestination() throws IOException {
 		djikstra.destinationPicked = false;
 		djikstra.sourcePicked = false;
-		//graph.DrawGraph(graphDrawing);
+		graph.DrawGraph(graphDrawing);
 		destinationNode.setText("");
 		sourceNode.setText("");
 		distance.setText("");
@@ -192,10 +192,17 @@ public class Controller {
 		} catch ( Exception e){
 			distance.setText("Operacja niemożliwa");
 		}
-		String dist = String.valueOf(djikstra.getDistance(djikstra.getDestination()));
-		dist = dist.substring(0, dist.indexOf(".")+3);
-
-		distance.setText( dist);
+		if( djikstra.getDistance(djikstra.getDestination()) != Double.MAX_VALUE) {
+			String dist = String.valueOf(djikstra.getDistance(djikstra.getDestination()));
+			dist = dist.substring(0, dist.indexOf(".") + 3);
+			distance.setText(dist);
+		} else {
+			distance.setText("Brak połączenia");
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setHeaderText("Błąd");
+			alert.setContentText("Nie można obliczyć drogi pomiędzy wybranymi wierzchołkami, ponieważ graf jest niespójny");
+			alert.show();
+		}
 	}
 	@FXML
 	private void showManual(){
