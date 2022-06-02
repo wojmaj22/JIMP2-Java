@@ -5,9 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 
 public class Controller {
@@ -41,9 +39,10 @@ public class Controller {
 	private Label distance;
 	@FXML
 	private Pane graphDrawing;
+
 	// Button to save graph to file
 	@FXML
-	protected void onSaveButtonClick(){
+	protected void onSaveButtonClick(){ // on default writes to folder "Data\\"
 		String filename = "Data\\" + writeFileTextField.getText();
 		if (!filename.contains(".txt")){
 			filename += ".txt";
@@ -59,8 +58,8 @@ public class Controller {
 		graphReader.readGraph( graph);
 		try {
 			graph.DrawGraph(graphDrawing);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception exception) {
+			exception.printStackTrace();
 		}
 		minEdgeLengthLabel.setText(String.valueOf(graph.getMinWeight()));
 		maxEdgeLengthLabel.setText(String.valueOf(graph.getMaxWeight()));
@@ -68,7 +67,7 @@ public class Controller {
 	}
 
 	@FXML
-	protected void onResetSourceDestination() throws IOException {
+	protected void onResetSourceDestination() {
 		djikstra.destinationPicked = false;
 		djikstra.sourcePicked = false;
 		graph.DrawGraph(graphDrawing);
@@ -104,7 +103,7 @@ public class Controller {
 
 	// Button to generate a graph
 	@FXML
-	protected void onGenerateButtonClick( ) throws IOException { // zmienić w przypadku braku wczytanego argumentu
+	protected void onGenerateButtonClick( ) throws IOException {
 		String weight;
 		String dimensions;
 		Double minWeight = 0.0;
@@ -147,45 +146,30 @@ public class Controller {
 
 		//graph.printGraphAdjacencyList(); // use to check if graph is generated correctly
 
-		//scrollPane.setContent( graphDrawing);
-
 		try {
-			graph.DrawGraph(graphDrawing);
-			//graph.drawGraph(graphDrawing);
+			graph.DrawGraph(graphDrawing); // draw a graph to pane
 		} catch ( Exception e){
 			e.printStackTrace();
 		}
-		/*try {
-			graph.drawGraph(graphDrawing);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	// Button to check if graph is connected
 	@FXML
 	protected void onBfsButton(){
 		if (graph.breathFirstSearch()){
-			//System.out.println("Graf jest spójny");
 			graphConnected.setText("Spójny");
 		} else {
-			//System.out.println("Graf nie jest spójny");
 			graphConnected.setText("Niespójny");
 		}
-		//graph.printGraphAdjacencyList();
 	}
 
 	// Button to calculate the shortest path between Nodes
 	@FXML
 	protected void onCheckRouteButton(){
-
 		int destination = djikstra.getDestination();
 		djikstra.setDjikstra( graph.getNodeAmount(), graph);
-		//System.out.println( source + " " + destination);
 		try {
-
 			djikstra.calculatePath();
-			//djikstra.printPrecursorNode();
 			djikstra.createPath(destination);
 			System.out.println(djikstra.getPath());
 			djikstra.drawPath(djikstra.getPath(), graphDrawing);
@@ -200,7 +184,7 @@ public class Controller {
 			distance.setText("Brak połączenia");
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setHeaderText("Błąd");
-			alert.setContentText("Nie można obliczyć drogi pomiędzy wybranymi wierzchołkami, ponieważ graf jest niespójny");
+			alert.setContentText("Nie można obliczyć drogi pomiędzy wybranymi wierzchołkami, ponieważ graf jest niespójny.");
 			alert.show();
 		}
 	}
@@ -217,8 +201,6 @@ public class Controller {
 				"Aby obliczyć ścieżkę pomiędzy wierzchołkami należy najpierw wygenerować graf lub wczytać go za pomocą odpowiedniego pola,\n" +
 				"a następnie wybrać na graficznej ilustacji grafu wierzchołki, i kliknąć \"Oblicz drogę\".\n" +
 				"Aby obliczyć drogę pomiędzy innymi wierzchołkami wczytanego grafu należy zresetować wybór za pomocą odpowiedniego przycisku.\n");
-		// tutaj poprawić
-
 		alert.show();
 	}
 

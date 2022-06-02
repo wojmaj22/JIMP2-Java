@@ -1,21 +1,19 @@
 package com.example.grafy;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-
 import java.util.LinkedList;
 
 public class Djikstra {
 
 	private Graph graph; // point which graph are we using
-	private int source; // source from which we finde the shortest paths
-	private int destination;
+	private int source; // source from which we find the shortest paths
+	private int destination; // destination to find the shortest path
 	boolean destinationPicked = false;
 	boolean sourcePicked = false;
 	private Integer[] previousNode; // array of previous nodes in the shortest path from source
 	private Double [] distances; // array of the shortest distances from source
-	private LinkedList<Integer> path;
+	private LinkedList<Integer> path; // a path to our destination
 
 	// Djikstra basic contructor
 	public Djikstra(){
@@ -29,6 +27,7 @@ public class Djikstra {
 		this.distances = new Double[nodeAmount];
 	}
 
+	// method to change a djistra to use with new graph
 	public void setDjikstra(int nodeAmount, Graph graph){
 		this.graph = graph;
 		this.previousNode = new Integer[nodeAmount];
@@ -78,21 +77,7 @@ public class Djikstra {
 		previousNode = precursor;
 	}
 
-	// method used in Djikstra-algorith to find the nearest node( could be optimised a bit)
-	private int getLowestNotVisited( int amount, Double[] distance, boolean[] visited){
-		int minIndex = 0;
-		Double minDistance = Double.MAX_VALUE;
-		for( int i = 0; i < amount; i++){
-			if( distance[i] < minDistance){
-				if( !visited[i]){
-					minDistance = distance[i];
-					minIndex = i;
-				}
-			}
-		}
-		return minIndex;
-	}
-
+	// additional method to Djikstra algorithm
 	private int getLowest( LinkedList<Integer> Nodes, Double[] distances){
 		Double minDistance = Double.MAX_VALUE;
 		int lowestInd = 0;
@@ -126,6 +111,7 @@ public class Djikstra {
 		this.path = path;
 	}
 
+	// draws a path on pane with a graph already drawed
 	void drawPath(LinkedList<Integer> path, Pane pane){
 		double xLength;
 		double yLength;
@@ -148,11 +134,8 @@ public class Djikstra {
 		for( int i = 0; i < path.size()-1; i++){
 			yStart = (int) (path.get(i) / this.graph.getXdimension() * yLength) +10;
 			xStart = ((path.get(i) % this.graph.getXdimension()) * xLength ) +10;
-			//System.out.println( path.get(i) % this.graph.getYdimension() + " " + (path.get(i) % this.graph.getXdimension()) * xLength);
-			//System.out.println( xStart + " | " + yStart);
 			Line line = new Line();
 			line.setStyle("-fx-stroke: White");
-			line.setId("path");
 			line.setStrokeWidth(2);
 			line.setStartX( xStart);
 			line.setStartY( yStart);
@@ -172,6 +155,7 @@ public class Djikstra {
 			pane.getChildren().add(line);
 		}
 	}
+
 
 	// all needed getters and setters
 	public Integer[] getPreviousNode() {
